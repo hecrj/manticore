@@ -59,12 +59,14 @@ public class Application
      * This data controller is injected to the business controllers on creation.
      * @param data The controller of the data layer
      */
-    public void setDataController(JAXBDataController data) {
+    public void setDataController(JAXBDataController data)
+    {
         this.data = data;
     }
     
     /**
      * Adds a presentation controller to the presentation layer.
+     * This operation injects the business controllers of the application to the presentation controller.
      * @param presentation The presentation controller
      */
     public void addPresentation(PresentationController presentation)
@@ -78,7 +80,7 @@ public class Application
     /**
      * Uses reflection to add business controllers to the business layer dinamically!
      * Every controller is injected with the data controller when constructed.
-     * @param name Name of the business controller (camel cased)
+     * @param controllerClass Class of the business controller
      */
     public void addBusiness(Class<? extends BusinessController> controllerClass)
     {
@@ -96,8 +98,7 @@ public class Application
     }
     
     /**
-     * Assigns a name to a controller in the business layer without reflection.
-     * @param name Name to identify the controller
+     * Add a controller in the business layer without using reflection.
      * @param controller The business controller
      */
     public void addBusiness(BusinessController controller)

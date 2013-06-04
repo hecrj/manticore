@@ -1,7 +1,7 @@
 package manticore;
 
 /**
- * Interface that Observers can use to start listening the Observable object.
+ * Interface that an Observer can use to start listening the Observable object.
  * The Observable interface is part of the observer pattern.
  * @author hector
  */
@@ -15,7 +15,7 @@ public interface Observable
     
     /**
      * Notifies all the listeners that an event has occurred.
-     * @param name The event to be notified
+     * @param event The event to be notified
      */
     public void notify(Event event);
 }
