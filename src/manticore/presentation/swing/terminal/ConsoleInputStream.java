@@ -1,35 +1,45 @@
 package manticore.presentation.swing.terminal;
 
-import manticore.Debug;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.LinkedList;
 import java.util.Queue;
 import javax.swing.JTextPane;
 import javax.swing.text.AbstractDocument;
+import manticore.Debug;
 
 /**
- *
+ * Input stream that can be related to a Swing JTextPane to be the input of a terminal.
  * @author hector
  */
-public class ConsoleInputStream
-    extends InputStream
+public class ConsoleInputStream extends InputStream
 {
     TerminalFilter terminalFilter;
     AbstractDocument document;
     Queue<Character> contents;
     boolean isConfirmed = true;
-
-    public ConsoleInputStream(final JTextPane textPane) {
+    
+    /**
+     * Creates a new ConsoleInputStream using textPane as input source.
+     * @param textPane A JTextPane that should be used as input source
+     */
+    public ConsoleInputStream(final JTextPane textPane)
+    {
         terminalFilter = new TerminalFilter(this);
         document = (AbstractDocument) textPane.getDocument();
         document.setDocumentFilter(terminalFilter);
         
         contents = new LinkedList();
     }
-
+    
+    /**
+     * Overrides read operation from InputStream to support reading from a Swing JTextPane.
+     * @return Next byte of data read
+     * @throws IOException 
+     */
     @Override
-    synchronized public int read() throws IOException {
+    synchronized public int read() throws IOException
+    {
         while(contents.isEmpty()) {
             if(! isConfirmed) {
                 isConfirmed = true;

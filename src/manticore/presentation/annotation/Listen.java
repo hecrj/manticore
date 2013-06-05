@@ -1,10 +1,10 @@
 package manticore.presentation.annotation;
 
-import manticore.Event;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import manticore.Event;
 
 /**
  * Annotation used to tell that some method is listening to an event.
