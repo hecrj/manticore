@@ -1,6 +1,5 @@
 package manticore.presentation.terminal;
 
-import manticore.Debug;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import manticore.Debug;
 
 /**
  * Tool for reading and printing to input/output streams.
@@ -86,6 +86,10 @@ public class IOStream
         }
     }
     
+    /**
+     * Reads a boolean from the input stream.
+     * @return True if read string is 'y' or 'yes', false otherwise
+     */
     public boolean readBoolean() {
         String input = readString();
         
@@ -212,6 +216,11 @@ public class IOStream
         return ibuffer.hasNext();
     }
     
+    /**
+     * Tells whether the input buffer has one string with the given pattern left.
+     * @param pattern The pattern to check
+     * @return True if the input buffer has one or more strings with that pattern, false otherwise
+     */
     public boolean hasNext(String pattern) {
         return ibuffer.hasNext(pattern);
     }

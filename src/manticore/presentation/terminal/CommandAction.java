@@ -1,13 +1,13 @@
 package manticore.presentation.terminal;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import manticore.Debug;
 import manticore.Options;
 import manticore.presentation.terminal.annotation.CommandOptions;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 /**
- *
+ * Represents a terminal command.
  * @author hector
  */
 public class CommandAction
@@ -42,6 +42,12 @@ public class CommandAction
      */
     private Method action;
     
+    /**
+     * Creates a new command with the given command group, action and descripcion.
+     * @param commandGroup The command group of this command
+     * @param action Method of the command group that this command represents
+     * @param description Description of the command
+     */
     public CommandAction(CommandGroup commandGroup, Method action, String description)
     {
         name = action.getName();
@@ -59,33 +65,58 @@ public class CommandAction
             options = new String[]{};
     }
     
+    /**
+     * Gets the name of the command.
+     * @return The name of the command
+     */
     public String getName()
     {
         return name;
     }
     
+    /**
+     * Gets the description of the command.
+     * @return The description of the command
+     */
     public String getDescription()
     {
         return description;
     }
     
+    /**
+     * Gets the options pattern of the command.
+     * @return The options pattern of the command
+     */
     public String getOptionsPattern()
     {
         return OPTIONS_PATTERN;
     }
     
+    /**
+     * Given an option match, returns the name of the option.
+     * @param match An option match
+     * @return The name of the option matched
+     */
     public String getOptionName(String match)
     {
         return match.substring(2);
     }
     
+    /**
+     * Returns the options that this command accepts.
+     * @return The options that this command accepts
+     */
     public String[] getOptions()
     {
         return options;
     }
     
-    public void exec(Options currentOptions)
-            throws Throwable
+    /**
+     * Executes the command with the given options,
+     * @param currentOptions Options that should be used in the execution of the command
+     * @throws Throwable 
+     */
+    public void exec(Options currentOptions) throws Throwable
     {
         try {
             if(options.length == 0) {

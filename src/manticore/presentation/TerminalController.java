@@ -183,7 +183,6 @@ public class TerminalController extends PresentationController
             commandGroup.setName(commandGroupName);
             commandGroup.setDescription(commandSubject.description());
             commandGroup.setIOStream(iostream);
-            commandGroup.scanCommands();
             
             commandGroups.put(commandGroupName, commandGroup);
             super.addBusinessController(controller);
