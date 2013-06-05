@@ -6,8 +6,8 @@ import javax.xml.bind.JAXBException;
  * Public interface for mapping and saving data using JAXB.
  * @author hector
  */
-public interface JAXBDataController {
-    
+public interface JAXBDataController
+{
     /**
      * Returns the object previosuly saved with the name given.
      * @param name Name of the object to get

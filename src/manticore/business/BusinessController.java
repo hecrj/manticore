@@ -1,11 +1,11 @@
 package manticore.business;
 
+import java.util.ArrayList;
+import java.util.List;
 import manticore.Event;
 import manticore.Observable;
 import manticore.Observer;
 import manticore.data.JAXBDataController;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represents a controller of the application business layer.

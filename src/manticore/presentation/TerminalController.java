@@ -1,5 +1,11 @@
 package manticore.presentation;
 
+import java.io.InputStream;
+import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import javax.xml.bind.JAXBException;
 import manticore.Debug;
 import manticore.Event;
 import manticore.Utils;
@@ -9,12 +15,6 @@ import manticore.presentation.terminal.AdvancedCommandGroup;
 import manticore.presentation.terminal.CommandGroup;
 import manticore.presentation.terminal.IOStream;
 import manticore.presentation.terminal.annotation.CommandSubject;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import javax.xml.bind.JAXBException;
 
 /**
  * Represents a terminal command line tool presentation controller.
@@ -27,6 +27,9 @@ public class TerminalController extends PresentationController
      */
     private static final int HELP_PADDING = 20;
     
+    /**
+     *Every line that starts with this string will be ignored
+     */
     private static final String COMMENT_MARK = "#";
     
     /**
@@ -54,11 +57,16 @@ public class TerminalController extends PresentationController
      */
     private String welcomeMsg;
     
+    /**
+     * Tells whether the terminal has been initialized or not
+     */
     private boolean isInitialized;
     
     /**
      * Constructs a new TerminalController with the default System input/output.
      * @param commandsPackage The package where the commands are located
+     * @param istream The input stream that the terminal should use
+     * @param ostream The print stream that the terminal should use
      */
     public TerminalController(String commandsPackage, InputStream istream, PrintStream ostream)
     {
@@ -69,12 +77,17 @@ public class TerminalController extends PresentationController
         isInitialized = false;
     }
     
-    public void setWelcomeMessage(String welcomeMsg) {
+    /**
+     * Sets the welcome message that the terminal must print on initialization.
+     * @param welcomeMsg The welcome message
+     */
+    public void setWelcomeMessage(String welcomeMsg) 
+    {
         this.welcomeMsg = welcomeMsg;
     }
     
     /**
-     * Initializes and runs the terminal.
+     * Initializes and runs the terminal in a new thread.
      */
     @Override
     public void init()
@@ -111,15 +124,20 @@ public class TerminalController extends PresentationController
         }.start();
     }
     
+    /**
+     * Tells whether a line should be ignored or not.
+     * @param line A line
+     * @return True if the line should be ignored, false otherwise
+     */
     private boolean shouldLineBeIgnored(String line)
     {
         return line.isEmpty() || line.startsWith(COMMENT_MARK);
     }
     
     /**
-     * Recieves events and, in debug mode, prints the information received.
-     * @param name Name of the event
-     * @param data Data related with the event
+     * Recieves events and does nothing.
+     * This method is useful when overriden.
+     * @param event Event occurred
      */
     @Override
     public void notify(Event event)
@@ -131,7 +149,13 @@ public class TerminalController extends PresentationController
      * Adds a business controller on top of the terminal creating a command subject of the same name and
      * associating the business controller to it.
      * These controllers are injected into the commands of the terminal using reflection.
-     * @param name Name of the business controller
+     * The command classes should be located in the commandsPackage used to create this terminal and must have
+     * the same name as its business controllers.
+     * 
+     * For example:
+     * BusinessController: PostController
+     * CommandGroup: PostCommands
+     * 
      * @param controller Business controller to add
      */
     @Override
@@ -222,7 +246,11 @@ public class TerminalController extends PresentationController
         }
     }
     
-    public void showHelp() {
+    /**
+     * Shows the terminal help in the print stream used to create this terminal.
+     */
+    public void showHelp()
+    {
         iostream.println("Available commands:");
         
         for(CommandGroup commandGroup : commandGroups.values())
@@ -233,7 +261,11 @@ public class TerminalController extends PresentationController
         iostream.println("Use 'help [command]' to show more information about the command.");
     }
     
-    public void quit() {
+    /**
+     * Asks the user for confirmation, and if the user says 'yes' or 'y' quits the whole application.
+     */
+    public void quit()
+    {
         boolean isConfirmed = iostream.readBoolean("Are you sure do you really want to quit?");
         
         if(isConfirmed)
@@ -246,7 +278,8 @@ public class TerminalController extends PresentationController
      * @param shortcut The shortcut of the subject to get
      * @return The full subject
      */
-    private String getSubject(String shortcut) {
+    private String getSubject(String shortcut)
+    {
         if(! shortcuts.containsKey(shortcut))
             return shortcut;
         

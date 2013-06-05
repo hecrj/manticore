@@ -13,7 +13,7 @@ abstract public class PresentationController implements Observer
      * Initializes and runs the presentation controller.
      * @throws Exception 
      */
-    abstract public void init() throws Exception;
+    abstract public void init();
     
     /**
      * Adds a business controller on top of this presentation controller.

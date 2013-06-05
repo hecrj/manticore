@@ -1,9 +1,5 @@
 package manticore.presentation;
 
-import manticore.Debug;
-import manticore.Event;
-import manticore.presentation.annotation.Listen;
-import manticore.presentation.swing.SwingException;
 import java.awt.Component;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -15,6 +11,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import javax.swing.SwingUtilities;
+import manticore.Debug;
+import manticore.Event;
+import manticore.presentation.annotation.Listen;
+import manticore.presentation.swing.SwingException;
 
 /**
  * A ViewLoader has the responsibility of loading and managing views on memory.
@@ -33,6 +33,10 @@ public class ViewLoader
      */
     private Map<Class, List< Entry<Component, Method> >> events;
     
+    /**
+     * Constructs a ViewLoader for the given SwingController.
+     * @param presentation The SwingController that is going to use this ViewLoader
+     */
     public ViewLoader(SwingController presentation)
     {
         this.presentation = presentation;
@@ -52,10 +56,9 @@ public class ViewLoader
     
     /**
      * Loads a view.
-     * @param name The name of the view to load
-     * @throws Exception 
+     * @param viewClass The class of the view to load
      */
-    public void load(Class<? extends Component> viewClass) throws SwingException
+    public void load(Class<? extends Component> viewClass)
     {
         try {
             Component view = (Component) viewClass.getConstructor(SwingController.class).newInstance(
@@ -113,6 +116,10 @@ public class ViewLoader
         return (T) views.get(viewClass);
     }
     
+    /**
+     * Notifies an Event to all the loaded views that are listening to it.
+     * @param event The event occurred
+     */
     public void notify(Event event) {
         Class eventClass = event.getClass();
         
@@ -156,7 +163,7 @@ public class ViewLoader
      * Given a view, one of its methods and an event, calls the method passing the event as
      * parameter using the AWT event queue to avoid thread race conditions.
      * @param entry A view-method pair
-     * @param data Mapped data
+     * @param event The event to notify
      */
     private void invokeEvent(final Entry<Component, Method> entry, final Event event) { 
         Runnable callEvent = new Runnable()

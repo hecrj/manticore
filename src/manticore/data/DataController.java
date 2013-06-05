@@ -25,8 +25,8 @@ import javax.xml.bind.Unmarshaller;
  * 
  * @author hector
  */
-public class DataController {
-    
+public class DataController
+{
     /**
      * Creates a new data controller.
      */

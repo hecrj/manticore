@@ -1,13 +1,14 @@
 package manticore.presentation;
 
-import manticore.Event;
-import manticore.business.BusinessController;
-import manticore.presentation.swing.SwingException;
-import manticore.presentation.swing.SwingExceptionHandler;
 import java.awt.Component;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.JFrame;
+import manticore.Event;
+import manticore.business.BusinessController;
+import manticore.presentation.swing.SwingException;
+import manticore.presentation.swing.SwingExceptionHandler;
 
 /**
  * Represents a Swing graphical user interface presentation controller.
@@ -25,13 +26,16 @@ public class SwingController extends PresentationController
      */
     private ViewLoader vloader;
     
+    /**
+     * Business controller that this presentation controller can access
+     */
     private Map<Class, BusinessController> businessControllers;
     
     /**
-     * Constructs a SwingController given the package where the views are located
-     * @param viewsPackage The package where the views of this controller are located 
+     * Constructs a SwingController given the main view that should be loaded on initialization.
+     * @param mainView Class of the main view that should be loaded on initialization
      */
-    public SwingController(Class<? extends Component> mainView)
+    public SwingController(Class<? extends JFrame> mainView)
     {
         super();
         
@@ -43,19 +47,17 @@ public class SwingController extends PresentationController
     }
     
     /**
-     * Initializes and runs the SwingController
-     * @throws Exception 
+     * Initializes and runs the SwingController.
      */
     @Override
-    public void init() throws Exception
+    public void init()
     {
         show(mainView);
     }
     
     /**
      * Receives an event and notifies it to the views that are listening to that event.
-     * @param name Name of the event
-     * @param data Data related with the event
+     * @param event The event occurred
      */
     @Override
     public void notify(Event event)
@@ -63,16 +65,26 @@ public class SwingController extends PresentationController
         vloader.notify(event);
         
     }
-
+    
+    /**
+     * Adds a business controller on top of the SwingController.
+     * @param controller The business controller
+     */
     @Override
-    public void addBusinessController(BusinessController controller) {
+    public void addBusinessController(BusinessController controller)
+    {
         businessControllers.put(controller.getClass(), controller);
         
         super.addBusinessController(controller);
     }
     
+    /**
+     * Gets a business controller that has been added previously to this SwingController.
+     * @param <T> Controller class
+     * @param controllerClass The business controller class
+     * @return Instance of the controllerClass business controller
+     */
     public <T extends BusinessController> T getBusinessController(Class<T> controllerClass)
-            throws SwingException
     {
         if(! businessControllers.containsKey(controllerClass))
             throw new SwingException("Business controller not found: " + controllerClass.getName());
@@ -80,14 +92,18 @@ public class SwingController extends PresentationController
         return (T) businessControllers.get(controllerClass);
     }
     
-    public Collection<BusinessController> getBusinessControllers() {
+    /**
+     * Returns a collection of all the business controllers that this presentation controller can access.
+     * @return Collection of all the business controllers that this presentation controller can access
+     */
+    public Collection<BusinessController> getBusinessControllers()
+    {
         return businessControllers.values();
     }
     
     /**
      * Loads a view on memory given its name.
      * @param viewClass The class of the view to load
-     * @throws Exception 
      */
     public void load(Class<? extends Component> viewClass)
     {
@@ -106,16 +122,22 @@ public class SwingController extends PresentationController
         get(viewClass).setVisible(true);
     }
     
-    public void showNew(Class<? extends Component> viewClass) {
+    /**
+     * Creates a new instance of the view and shows it.
+     * @param viewClass Class of the view to create and show
+     */
+    public void showNew(Class<? extends Component> viewClass)
+    {
         getNew(viewClass).setVisible(true);
     }
     
     /**
-     * Creates and stores a new instance of the view.
+     * Creates, stores and returns a new instance of the view.
      * @param viewClass Class of the view to create
-     * @return 
+     * @return The created view
      */
-    public <T extends Component> T getNew(Class<T> viewClass) {
+    public <T extends Component> T getNew(Class<T> viewClass)
+    {
         load(viewClass);
         
         return get(viewClass);
