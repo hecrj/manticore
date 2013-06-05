@@ -1,0 +1,9 @@
+manticore
+manticore.business
+manticore.data
+manticore.presentation
+manticore.presentation.annotation
+manticore.presentation.swing
+manticore.presentation.swing.terminal
+manticore.presentation.terminal
+manticore.presentation.terminal.annotation
