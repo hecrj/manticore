@@ -1,0 +1,85 @@
+manticore
+=========
+
+A simple Java framework for developing desktop apps using a 3-tier architecture.
+
+## Overview
+**manticore** has been designed to facilitate the wiring process of any application that uses a 3-tier architecture. It centralizes all the application wiring process and makes possible to add new components to your application with only one line of code.
+
+## Quick start
+It's easy to start using **manticore**! The basic steps are:
+
+1. Create a new **Application**.
+2. Set a **data controller** to represent the **data layer** of the **Application**.
+3. Add **business controllers** to the **business layer**.
+4. Add **presentation controllers** to the **presentation layer**.
+5. Run the **Application**!
+
+### Application example
+```Java
+package example;
+
+import manticore.Application;
+import manticore.data.JAXBDataController;
+import manticore.data.DataController;
+import manticore.presentation.PresentationController;
+import manticore.presentation.SwingController;
+import example.business.controllers.ExampleController;
+import example.presentation.swing.MainFrame;
+
+public class Example
+{
+    public static void main(String[] args)
+    {
+        // Create a new Application
+        Application app = new Application();
+        
+        // Set a data controller
+        JAXBDataController dataController = new DataController();
+        app.setDataController(dataController);
+        
+        // Add business controllers
+        app.addBusinessController(ExampleController.class);
+        // [...]
+        
+        // Add presentation controllers
+        PresentationController swingController = new SwingController(MainFrame.class);
+        app.addPresentationController(swingController);
+        // [...]
+        
+        // Run the application!
+        app.init();
+    }
+}
+```
+
+## Data controllers
+**manticore** comes with a default implementation of a basic **JAXBDataController** ready to be used in any application.
+
+To see detailed information visit the JavaDoc: [DataController](http://hecrj.github.io/manticore/manticore/data/DataController.html)
+
+## Business controllers
+Any class that extends `manticore.business.BusinessController` is a business controller. Every business controller should have a single-arg constructor that receives an instance of a `manticore.data.JAXBDataController` used to tie the data layer with the business layer.
+
+### Controller example
+```Java
+package example.business.controllers;
+
+public class ExampleController extends BusinessController
+{
+    public ExampleController(JAXBDataController dataController)
+    {
+        super(dataController);
+        // dataController is assigned to the protected attribute: data
+    }
+}
+```
+
+## Presentation controllers
+**manticore** comes with two **presentation controllers** ready to be used in any application:
+
+1. **[SwingController](http://hecrj.github.io/manticore/manticore/presentation/SwingController.html)**: Presentation controller to be used with Swing views. It can load views and notify events to the loaded views.
+2. **[TerminalController](http://hecrj.github.io/manticore/manticore/presentation/TerminalController.html)**: Presentation controller that can handle user commands and read and write data from input/print streams.
+
+## Documentation
+* **manticore** JavaDoc: http://hecrj.github.io/manticore/
