@@ -65,6 +65,9 @@ Any class that extends `manticore.business.BusinessController` is a business con
 ```Java
 package example.business.controllers;
 
+import manticore.business.BusinessController;
+import manticore.data.JAXBDataController;
+
 public class ExampleController extends BusinessController
 {
     public ExampleController(JAXBDataController dataController)
