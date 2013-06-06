@@ -1,6 +1,8 @@
 package manticore.data;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -25,14 +27,16 @@ import javax.xml.bind.Unmarshaller;
  * 
  * @author hector
  */
-public class DataController
+public class DataController implements JAXBDataController
 {
+    private Map<String, Object> data;
+    
     /**
      * Creates a new data controller.
      */
     public DataController()
     {
-        
+        data = new HashMap();
     }
     
     /**
@@ -41,6 +45,7 @@ public class DataController
      * @param path Path where to save the file with the generated XML
      * @throws JAXBException 
      */
+    @Override
     public void save(Object o, String path) throws JAXBException
     {
         Class[] boundClasses = { o.getClass() };
@@ -56,6 +61,7 @@ public class DataController
      * @param boundClasses Classes that JAXB has to take into account
      * @throws JAXBException 
      */
+    @Override
     public void save(Object o, String path, Class[] boundClasses) throws JAXBException
     {
         JAXBContext jc = JAXBContext.newInstance(boundClasses);
@@ -72,6 +78,7 @@ public class DataController
      * @return The loaded object
      * @throws JAXBException 
      */
+    @Override
     public Object load(Class c, String path) throws JAXBException
     {
         Class[] boundClasses = { c };
@@ -87,11 +94,40 @@ public class DataController
      * @return The loaded object
      * @throws JAXBException 
      */
+    @Override
     public Object load(Class[] boundClasses, String path) throws JAXBException
     {
         JAXBContext jc = JAXBContext.newInstance(boundClasses);
         Unmarshaller u = jc.createUnmarshaller();
         
         return u.unmarshal(new File(path));
+    }
+    
+    /**
+     * Returns the object previosuly saved with the name given.
+     * @param name Name of the object to get
+     * @return Object previously saved as name
+     */
+    @Override
+    public Object get(String name)
+    {
+        return data.get(name);
+    }
+    
+    /**
+     * Stores an object with the name given.
+     * @param name Name of the object
+     * @param o Object to store
+     */
+    @Override
+    public void set(String name, Object o)
+    {
+        data.put(name, o);
+    }
+    
+    @Override
+    public boolean has(String name)
+    {
+        return data.containsKey(name);
     }
 }
